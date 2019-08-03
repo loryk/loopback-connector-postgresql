@@ -871,6 +871,10 @@ describe('Serial properties', function() {
           'productCode': {
             'type': 'number', 'generated': true,
           },
+          'productKey': {
+            'type': 'number', 'generated': true,
+            'postgresql': {'dataType': 'BIGINT'},
+          },
         },
       };
     const models = db.modelBuilder.buildModels(schema);
@@ -887,12 +891,13 @@ describe('Serial properties', function() {
           Model.create({productId: 'p001'}, callback);
         },
         function(callback) {
-          Model.create({productId: 'p002'}, callback);
+          Model.create({productId: 'p002', productKey: 9000000000000}, callback);
         },
         function(callback) {
           Model.findOne({where: {productId: 'p001'}}, function(err, r) {
             r.should.have.property('productId');
             r.should.have.property('productCode', 1);
+            r.should.have.property('productKey', '1');
             callback(null, r);
           });
         },
@@ -900,6 +905,7 @@ describe('Serial properties', function() {
           Model.findOne({where: {productId: 'p002'}}, function(err, r) {
             r.should.have.property('productId');
             r.should.have.property('productCode', 2);
+            r.should.have.property('productKey', '9000000000000');
             callback(null, r);
           });
         },
